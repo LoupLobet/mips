@@ -1,10 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef union {
-	char *s;
-	int n;
-} Arg;
+typedef struct {
+	int args[3];
+	char *label;
+	int op;
+	unsigned int pc;
+} Inst;
+
+typedef struct {
+	unsigned int pc;
+	long offset;
+} Label;
 
 typedef struct {
 	char *s;
@@ -13,14 +20,20 @@ typedef struct {
 	int (*run)(char [3]);
 } Op;
 
+typdef struct {
+	char *s;
+	int val;
+} Reg;
+
 int	 strtoop(char *);
 
 enum {
-	VOID = 1 << 1,
-	REG  = 1 << 2,
-	IMM  = 1 << 3,
-	BASE = 1 << 4,
-	LABEL = 1 << 5,
+	VOID,
+	IMM5,
+	IMM16,
+	LABEL,
+	REG,
+	TARG,
 };
 
 enum {
@@ -52,6 +65,79 @@ enum {
 	OPNB,
 };
 
+enum {
+	$0,
+	$1,
+	$2,
+	$3,
+	$4,
+	$5,
+	$6,
+	$7,
+	$8,
+	$9,
+	$10,
+	$11,
+	$12,
+	$13,
+	$14,
+	$15,
+	$16,
+	$17,
+	$18,
+	$19,
+	$20,
+	$21,
+	$22,
+	$23,
+	$24,
+	$25,
+	$26,
+	$27,
+	$28,
+	$29,
+	$30,
+	$31,
+	REGNB,
+};
+
+enum {
+	$zero = $0,
+	$at = $1,
+	$v0 = $2,
+	$v1 = $3,
+	$a0 = $4,
+	$a1 = $5,
+	$a2 = $6,
+	$a3 = $7,
+	$t0 = $8,
+	$t1 = $9,
+	$t2 = $10,
+	$t3 = $11,
+	$t4 = $12,
+	$t5 = $13,
+	$t6 = $14,
+	$t7 = $15,
+	$s0 = $16,
+	$s1 = $17,
+	$s2 = $18,
+	$s3 = $19,
+	$s4 = $20,
+	$s5 = $21,
+	$s6 = $22,
+	$s7 = $23,
+	$t8 = $24,
+	$t9 = $25,
+	$k0 = $26,
+	$k1 = $27,
+	$gp = $28,
+	$sp = $29,
+	$fp = $30,
+	$ra = $31,
+
+
+extern Label *labels;
+
 const Op oplst[OPNB] = {
 	[ADD]  = { "ADD",  0x20, NULL, NULL },
 	[ADDI] = { "ADDI", 0x08, NULL, NULL },
@@ -81,29 +167,66 @@ const Op oplst[OPNB] = {
 };
 
 const int protos[OPNB][3] = {
-	[ADD]  = { REG, REG, REG },
-	[ADDI] = { REG, REG, IMM },
-	[AND]  = { REG, REG, REG },
-	[BEQ]  = { REG, REG, IMM|LABEL },
-	[BGTZ] = { REG, REG, IMM|LABEL },
-	[BLEZ] = { REG, REG, IMM|LABEL },
-	[BNE]  = { REG, REG, IMM|LABEL },
-	[DIV]  = { REG, REG, VOID },
-	[J]    = {  },
-	[JAL]  = {  },
-	[JR]   = {  },
-	[LUI]  = { REG, IMM, VOID },
-	[LW]   = { REG, BASE },
-	[MFHI] = {  },
-	[MFLO] = {  },
-	[MULT] = {  },
-	[NOP]  = {  },
-	[OR]   = {  },
-	[ROTR] = {  },
-	[SLL]  = {  },
-	[SLT]  = {  },
-	[SRL]  = {  },
-	[SUB]  = {  },
-	[SW]   = {  },
-	[XOR]  = {  },
+	[ADD]  = { REG,  REG,   REG },
+	[ADDI] = { REG,  REG,   IMM16 },
+	[AND]  = { REG,  REG,   REG },
+	[BEQ]  = { REG,  REG,   LABEL },
+	[BGTZ] = { REG,  REG,   LABEL },
+	[BLEZ] = { REG,  REG,   LABEL },
+	[BNE]  = { REG,  REG,   LABEL },
+	[DIV]  = { REG,  REG,   VOID },
+	[J]    = { TARG, VOID,  VOID },
+	[JAL]  = { TARG, VOID,  VOID },
+	[JR]   = { REG,  VOID,  VOID },
+	[LUI]  = { REG,  IMM16, VOID },
+	[LW]   = { REG,  IMM16, REG },
+	[MFHI] = { REG,  VOID,  VOID },
+	[MFLO] = { REG,  VOID,  VOID },
+	[MULT] = { REG,  REG,   VOID },
+	[NOP]  = { VOID, VOID,  VOID },
+	[OR]   = { REG,  REG,   REG },
+	[ROTR] = { REG,  REG,   IMM5 },
+	[SLL]  = { REG,  REG,   IMM5 },
+	[SLT]  = { REG,  REG,   REG },
+	[SRL]  = { REG,  REG,   REG },
+	[SUB]  = { REG,  REG,   REG },
+	[SW]   = { REG,  IMM16, REG },
+	[XOR]  = { REG,  REG,   REG },
 }
+
+Reg regs[REGNB] = {
+	[$0] =  { "$0",  0 },
+	[$1] =  { "$1",  0 },
+	[$2] =  { "$2",  0 },
+	[$3] =  { "$3",  0 },
+	[$4] =  { "$4",  0 },
+	[$5] =  { "$5",  0 },
+	[$6] =  { "$6",  0 },
+	[$7] =  { "$7",  0 },
+	[$8] =  { "$8",  0 },
+	[$9] =  { "$9",  0 },
+	[$10] = { "$10", 0 },
+	[$11] = { "$11", 0 },
+	[$12] = { "$12", 0 },
+	[$13] = { "$13", 0 },
+	[$14] = { "$14", 0 },
+	[$15] = { "$15", 0 },
+	[$16] = { "$16", 0 },
+	[$17] = { "$17", 0 },
+	[$18] = { "$18", 0 },
+	[$19] = { "$19", 0 },
+	[$20] = { "$20", 0 },
+	[$21] = { "$21", 0 },
+	[$22] = { "$22", 0 },
+	[$23] = { "$23", 0 },
+	[$24] = { "$24", 0 },
+	[$25] = { "$25", 0 },
+	[$26] = { "$26", 0 },
+	[$27] = { "$27", 0 },
+	[$28] = { "$28", 0 },
+	[$29] = { "$29", 0 },
+	[$30] = { "$30", 0 },
+	[$31] = { "$31", 0 },
+};
+
+
