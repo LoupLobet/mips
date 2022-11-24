@@ -18,9 +18,10 @@ typedef struct {
 	int n;
 	char *(*hexa)(char [3]);
 	int (*run)(char [3]);
+	int proto[3];
 } Op;
 
-typdef struct {
+typedef struct {
 	char *s;
 	int val;
 } Reg;
