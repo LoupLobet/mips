@@ -59,7 +59,7 @@ const int protos[OPNB][3] = {
 	[SUB]  = { REG,  REG,   REG },
 	[SW]   = { REG,  IMM16, REG },
 	[XOR]  = { REG,  REG,   REG },
-}
+};
 
 Reg regs[REGNB] = {
 	[$0] =  { "$0",  0 },

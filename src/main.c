@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "util.h"
+#include "check.h"
 
 enum { KEEP_GOING, STEP_BY_STEP };
 
@@ -34,7 +35,7 @@ main(int argc, char *argv[])
 	}
 
     printf("Hello émulateur MIPS!\n");
-
+	isReg("25");
     return 0;
 }
 
@@ -57,7 +58,6 @@ automatic(char *file, char *as, char *out, int mode)
 	fclose(rfp);
 
 	if (mode == KEEP_GOING) {
-		fclose(afp);
 		fclose(ofp);
 	}
 }

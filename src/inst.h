@@ -20,7 +20,7 @@ typedef struct {
 	int (*run)(char [3]);
 } Op;
 
-typdef struct {
+typedef struct {
 	char *s;
 	int val;
 } Reg;
@@ -134,4 +134,4 @@ enum {
 	$sp = $29,
 	$fp = $30,
 	$ra = $31,
-}
+};
