@@ -14,9 +14,9 @@ typedef struct {
 } Label;
 
 typedef struct {
-	char *s;
-	int n;
-	char *(*hexa)(char [3]);
+	char *name;
+	int hexa;
+	char *(*build)(char [3]);
 	int (*run)(char [3]);
 	int proto[3];
 } Op;
@@ -27,6 +27,7 @@ typedef struct {
 } Reg;
 
 int	 strtoop(char *);
+Inst	*cookinst(char *);
 
 enum {
 	VOID,
