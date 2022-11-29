@@ -27,7 +27,7 @@ typedef struct {
 } Reg;
 
 int	 strtoop(char *);
-Inst	*cookinst(char *);
+Inst	*cookinst(char *, int);
 
 enum {
 	VOID,
@@ -137,3 +137,69 @@ enum {
 	$fp = $30,
 	$ra = $31,
 }
+
+Label *labels;
+
+const Op oplst[OPNB] = {
+	       /*  NAME    HEXA  BUILD RUN     PROTOTYPE          */
+	[ADD]  = { "ADD",  0x20, NULL, NULL, { REG,  REG,   REG } },
+	[ADDI] = { "ADDI", 0x08, NULL, NULL, { REG,  REG,   IMM16 } },
+	[AND]  = { "AND",  0x24, NULL, NULL, { REG,  REG,   REG } },
+	[BEQ]  = { "BEQ",  0x04, NULL, NULL, { REG,  REG,   LABEL } },
+	[BGTZ] = { "BGTZ", 0x07, NULL, NULL, { REG,  REG,   LABEL } },
+	[BLEZ] = { "BLEZ", 0x06, NULL, NULL, { REG,  REG,   LABEL } },
+	[BNE]  = { "BNE",  0x04, NULL, NULL, { REG,  REG,   LABEL } },
+	[DIV]  = { "DIV",  0x1a, NULL, NULL, { REG,  REG,   VOID } },
+	[J]    = { "J",    0x02, NULL, NULL, { TARG, VOID,  VOID } },
+	[JAL]  = { "JAL",  0x03, NULL, NULL, { TARG, VOID,  VOID } },
+	[JR]   = { "JR",   0x08, NULL, NULL, { REG,  VOID,  VOID } },
+	[LUI]  = { "LUI",  0x0f, NULL, NULL, { REG,  IMM16, VOID } },
+	[LW]   = { "LW",   0x23, NULL, NULL, { REG,  IMM16, REG } },
+	[MFHI] = { "MFHI", 0x10, NULL, NULL, { REG,  VOID,  VOID } },
+	[MFLO] = { "MFLO", 0x10, NULL, NULL, { REG,  VOID,  VOID } },
+	[MULT] = { "MULT", 0x18, NULL, NULL, { REG,  REG,   VOID } },
+	[NOP]  = { "NOP",  0x00, NULL, NULL, { VOID, VOID,  VOID } },
+	[OR]   = { "OR",   0x25, NULL, NULL, { REG,  REG,   REG } },
+	[ROTR] = { "ROTR", 0x02, NULL, NULL, { REG,  REG,   IMM5 } },
+	[SLL]  = { "SLL",  0x00, NULL, NULL, { REG,  REG,   IMM5 } },
+	[SLT]  = { "SLT",  0x2a, NULL, NULL, { REG,  REG,   REG } },
+	[SRL]  = { "SRL",  0x02, NULL, NULL, { REG,  REG,   REG } },
+	[SUB]  = { "SUB",  0x22, NULL, NULL, { REG,  REG,   REG } },
+	[SW]   = { "SW",   0x2b, NULL, NULL, { REG,  IMM16, REG } },
+	[XOR]  = { "XOR",  0x26, NULL, NULL, { REG,  REG,   REG } },
+};
+
+Reg regs[REGNB] = {
+	[$0] =  { "$0",  0 },
+	[$1] =  { "$1",  0 },
+	[$2] =  { "$2",  0 },
+	[$3] =  { "$3",  0 },
+	[$4] =  { "$4",  0 },
+	[$5] =  { "$5",  0 },
+	[$6] =  { "$6",  0 },
+	[$7] =  { "$7",  0 },
+	[$8] =  { "$8",  0 },
+	[$9] =  { "$9",  0 },
+	[$10] = { "$10", 0 },
+	[$11] = { "$11", 0 },
+	[$12] = { "$12", 0 },
+	[$13] = { "$13", 0 },
+	[$14] = { "$14", 0 },
+	[$15] = { "$15", 0 },
+	[$16] = { "$16", 0 },
+	[$17] = { "$17", 0 },
+	[$18] = { "$18", 0 },
+	[$19] = { "$19", 0 },
+	[$20] = { "$20", 0 },
+	[$21] = { "$21", 0 },
+	[$22] = { "$22", 0 },
+	[$23] = { "$23", 0 },
+	[$24] = { "$24", 0 },
+	[$25] = { "$25", 0 },
+	[$26] = { "$26", 0 },
+	[$27] = { "$27", 0 },
+	[$28] = { "$28", 0 },
+	[$29] = { "$29", 0 },
+	[$30] = { "$30", 0 },
+	[$31] = { "$31", 0 },
+};

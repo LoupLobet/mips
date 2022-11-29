@@ -4,27 +4,28 @@
 #include "inst.h"
 
 Inst *
-cookinst(char *raw)
+cookinst(char *raw, int size)
 {
-	char *argv[3]
-	Inst *inst;
-	char *p;
-	int argc;
 	int i;
-	int space;
+	char *p;
+
+	s = raw;
 
 	/* trim comment */
-	for (i = 0; raw[i] != '\0'; i++) {
-		if(raw[i] == '#')
-			raw[i] = '\0';
-	}
-	for (i = 0; raw[i] != '\0'; i++) {
-		if (raw[i] == ' ')
-			continue;
-		if (raw[i] == ',') {
-		}
+	if ((p = strchr(s, '#')) != NULL)
+		size = p - s;
+	/* trim leading, trailing whitespaces */
+	for (i = 0; i < size && (s[i] == ' ' || s[i] == '\t'); i++)
+		s++;
+	for (i = size - 1; i <= 0 && (s[i] == ' ' || s[i] == '\t'; i--)
+		size--;
+	if ((p = strchr(s, ':')) != NULL)
 
-	}
+	if ((p = strchr(s, ' ')) != NULL)
+	if ((p = strchr(s, ',')) != NULL)
+	if ((p = strchr(s, ',')) != NULL)
+	if ((p = strchr(s, '\n')) != NULL)
+
 }
 
 int
