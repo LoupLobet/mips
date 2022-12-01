@@ -62,10 +62,16 @@ isImm_5(char *imm){
 
 int
 isImm_16(char *imm){
-    int n = atoi(imm);
-    printf("%d is a digit\n",n);
+    int n;
+    if(is_digit(imm)==0)
+        printf("is not a digit");
+     else
+         printf("is digit");
+    //printf("the digit is %d\n",n);
+
+    //printf("the ptdr is %s\n",ptdr);
     if((n) != 0){
-        printf("%d\n",isdigit('9'));
+        //printf("%d\n",isdigit('9'));
         if ((n & 65535) == n){
             printf("yes\n");
             return 1;
@@ -75,6 +81,27 @@ isImm_16(char *imm){
     return 0;
 }
 
+
+/*
+ * cette focntion verifie si la chaine passé est numerique ou pas
+ * elle retourne 0 si non et la chaine si oui
+ */
+
+static int
+is_digit(char *imm){
+    int n = strlen(imm);
+    int *p = malloc(sizeof(int));
+    int nb [p];
+
+    for(int i=0; i <= n;i++){
+        if(isdigit([imm[i]!=0]))
+            ;
+        else
+            return 0;
+    }
+    return 1;
+
+}
 
 
 
