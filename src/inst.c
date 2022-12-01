@@ -3,13 +3,13 @@
 
 #include "inst.h"
 
-Inst *
-cookinst(char *raw, int size)
+//Inst *
+void cookinst(char *raw, int size)
 {
 	int i;
 	char *p;
 
-	s = raw;
+	char *s = raw;
 
 	/* trim comment */
 	if ((p = strchr(s, '#')) != NULL)
@@ -17,14 +17,14 @@ cookinst(char *raw, int size)
 	/* trim leading, trailing whitespaces */
 	for (i = 0; i < size && (s[i] == ' ' || s[i] == '\t'); i++)
 		s++;
-	for (i = size - 1; i <= 0 && (s[i] == ' ' || s[i] == '\t'; i--)
+	for (i = size - 1; i <= 0 && (s[i] == ' ' || s[i] == '\t'); i--)
 		size--;
-	if ((p = strchr(s, ':')) != NULL)
-
+	/*if ((p = strchr(s, ':')) != NULL)
 	if ((p = strchr(s, ' ')) != NULL)
 	if ((p = strchr(s, ',')) != NULL)
 	if ((p = strchr(s, ',')) != NULL)
-	if ((p = strchr(s, '\n')) != NULL)
+	if ((p = strchr(s, '\n')) != NULL)*/
+
 
 }
 
@@ -34,7 +34,7 @@ strtoop(char *s)
 	int i;
 
 	for (i = 0; i < OPNB; i++) {
-		if (!strcmp(oplst[i].s, s))
+		if (!strcmp(oplst[i].name, s))
 			return i;
 	}
 	return -1;

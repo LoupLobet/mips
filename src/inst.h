@@ -27,7 +27,7 @@ typedef struct {
 } Reg;
 
 int	 strtoop(char *);
-Inst	*cookinst(char *, int);
+//Inst	*cookinst(char *, int);
 
 enum {
 	VOID,
@@ -136,10 +136,7 @@ enum {
 	$sp = $29,
 	$fp = $30,
 	$ra = $31,
-<<<<<<< HEAD
 };
-=======
-}
 
 Label *labels;
 
@@ -206,4 +203,3 @@ Reg regs[REGNB] = {
 	[$30] = { "$30", 0 },
 	[$31] = { "$31", 0 },
 };
->>>>>>> 28d2c921a32cfca046d8ebe9bab1400937e24295

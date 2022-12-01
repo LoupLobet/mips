@@ -1,16 +1,22 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include "util.h"
 #include "inst.h"
 #include "check.h"
 
-
+/*
+ * Cette fonction verifie si une chaine est un registre valide
+ * c'est-à-dire si elle commence par '$' si oui la fonction verifie s'il est
+ * dans le tableau des registres.
+ * La fonction retourne 1 si reg est un registre et 0 si non
+ */
 int
 isReg(char *reg) {
 
     if(reg[0] =='$'){
-        for(int i=0; i<31; i++){
-            if(strcmp(reg,regs[i].s) == 0){
+        for(int i=0; i<REGNB; i++){
+            if(!strcmp(reg,regs[i].s)){
                 return 1;
             }
         }
@@ -19,89 +25,81 @@ isReg(char *reg) {
     return 0;
 }
 
+/*
+ * Cette fonction verifie si une chaine est un label valide
+ * c'est-à-dire si elle commence pas par un chiffre et contient
+ * des caractères alphanumeriques.
+ * Elle retourne 1 si oui et 0 si non
+ */
 int
 isLabel(char *label){
 
-    int n = strlen(label);
-
-    if (isdigit(label[0]) != 0){
-    }else{
-        if(label[n-1]==':'){
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int
-isoperator(char *operator){
-    //to uppercase operator
-
-    if(isdigit(operator[0]) || strlen(operator) > 4){
-    }else {
-        for(int i=0; i<25; i++){
-            if(strcmp(operator,oplst[i].name) == 0){
-                return 1;
+    int n;
+    n = strlen(label);
+    int j=0;
+    if (!isdigit(label[0])){
+        for(int i=1; i<n; i++){
+            if(isalnum(label[i])){
+                j++;
+            }else{
+                j =0;
+                return 0;
             }
         }
     }
- return 0;
-}
-
-int
-isImm_5(char *imm){
-    int n = atoi(imm);
-
-    if(isdigit(*imm)!=0){
-        if ((n & 31) == n){
-            return 1;
-        }
+    if(j!=0){
+        return 1;
     }
     return 0;
 }
+
+/*Cette fonction verifie si une chaine (op) est une operation valide
+ *et si elle est dans le tableau des operations qui le compilateur
+ *doit couvrir
+ *
+ */
+int
+isop(char *op){
+
+    if(!isdigit(op[0]) || strlen(op) > 4)
+        for(int i=0; i<OPNB; i++){
+            if(strcmp(op,oplst[i].name) == 0){
+                return 1;
+            }
+        }
+ return 0;
+}
+
+/*Cette fonction verifie si un immediat est codable sur 5 bits
+ *
+ */
+
+int
+isImm_5(char *imm){
+    int n;
+    n = estrtol(imm,10);
+    if ((n & 31) == n){
+            return 1;
+        }
+
+    return 0;
+}
+
+/*Cette fonction verifie si un immediat est codable sur 16 bits
+ *
+ */
 
 int
 isImm_16(char *imm){
     int n;
-    if(is_digit(imm)==0)
-        printf("is not a digit");
-     else
-         printf("is digit");
-    //printf("the digit is %d\n",n);
+    n = estrtol(imm,10);
 
-    //printf("the ptdr is %s\n",ptdr);
-    if((n) != 0){
-        //printf("%d\n",isdigit('9'));
-        if ((n & 65535) == n){
-            printf("yes\n");
+    if ((n & 65535) == n){
             return 1;
         }
-    }
-    printf("aii\n");
     return 0;
 }
 
-
-/*
- * cette focntion verifie si la chaine passé est numerique ou pas
- * elle retourne 0 si non et la chaine si oui
- */
-
-static int
-is_digit(char *imm){
-    int n = strlen(imm);
-    int *p = malloc(sizeof(int));
-    int nb [p];
-
-    for(int i=0; i <= n;i++){
-        if(isdigit([imm[i]!=0]))
-            ;
-        else
-            return 0;
-    }
-    return 1;
-
-}
 
 
 

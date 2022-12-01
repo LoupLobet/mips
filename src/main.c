@@ -36,11 +36,12 @@ main(int argc, char *argv[])
 
     printf("Hello émulateur MIPS!\n");
 	/*test chek functions */
-	//isReg("$65");
-	//isLabel("@mango:");
-	//isoperator("_ADDII");
+	//isReg("$fp");
+	//isLabel("mango");
+	//isop("45MFLO");
 	//isImm_5("50");
-	isImm_16("5bb");
+	//isImm_16("54");
+
     return 0;
 }
 
