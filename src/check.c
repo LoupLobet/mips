@@ -34,7 +34,7 @@ isLabel(char *label){
 }
 
 int
-isoperator(const char *operator){
+isoperator(char *operator){
     //to uppercase operator
 
     if(isdigit(operator[0]) || strlen(operator) > 4){
@@ -63,9 +63,9 @@ isImm_5(char *imm){
 int
 isImm_16(char *imm){
     int n = atoi(imm);
-
-    if(isdigit(n)!= 0){
-        printf("is a digit\n");
+    printf("%d is a digit\n",n);
+    if((n) != 0){
+        printf("%d\n",isdigit('9'));
         if ((n & 65535) == n){
             printf("yes\n");
             return 1;
