@@ -22,28 +22,36 @@ date: [COMPLÉTER ICI]
 * Comment avez-vous choisi de programmer l'analyse de texte (dont la lecture
 des opérandes entières) ?
 
-[COMPLÉTER ICI]
+En séparant l'instruction en 4 strings { Operateur, Operande1, Operande2, Operande2 },
+puis en vérifiant la nature des strings relativement au prototype de l'Operateur. Puis en encodant
+l'instruction sous forme de 4 entiers.
+Une methode preferee aurait ete d'utiliser lex(1).
 
 * Avez-vous vu des motifs récurrents émerger ? Avez-vous "factorisé" ces motifs
 pour éviter de les répéter ? Si non, serait-ce difficile ?
 
-[COMPLÉTER ICI]
+Nous n'avons pas factorise car cela fait peu de sens, au vu du nombre d'instructions non factorisables.
+De plus des instructions factorisables n'ont parfois aucun lien semantique entre elles.
+Nous avons plutot ecrit un "table d'instruction" (cf const Op oplst[OPNB] - inst.c).
+De plus pour la partie execution des instructions, la factorisation ne sera pas possible, et nous avons voulu
+garder une similarite entre le fonctionnement de l'exection et la generation de code.
 
-* Comment avez-vous procédé pour écrire les tests ? Étes-vous confiant·e·s que
+* Comment avez-vous procédé pour écrire les tests ? Étes-vous confiants que
 toutes les instructions gérées sont couvertes ?
 
-[COMPLÉTER ICI]
+Toutes les instructions ont été implementées, elles n'ont pas toutes été testés.
 
 * Quelle a été votre expérience avec l'utilisation et la compréhension de la
 documentation (ie. des annexes) ?
 
-[COMPLÉTER ICI]
+Bonne comprehension, sauf pour les instructions jump, qui sont assez mal décritent et dont le
+fonctionnement reste obscure.
 
 * Cochez (en remplaçant `[ ]` par `[x]`) si vous avez :
-  - [ ] Implémenté la traduction pour des instructions de toutes les catéories
+  - [X] Implémenté la traduction pour des instructions de toutes les catéories
       (calcul, comparaisons, sauts, HI/LO, mémoire)
-  - [ ] Implémenté la traduction pour toutes les instructions de l'annexe 2
-  - [ ] Pris en compte les cas particuliers : valeurs négatives, hors limites,
+  - [X] Implémenté la traduction pour toutes les instructions de l'annexe 2
+  - [X] Pris en compte les cas particuliers : valeurs négatives, hors limites,
       noms d'instructions ou opérandes invalides...
 
 

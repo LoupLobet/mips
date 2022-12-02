@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "build.h"
+#include "inst.h"
 #include "util.h"
 
 enum { KEEP_GOING, STEP_BY_STEP };
@@ -39,13 +41,16 @@ main(int argc, char *argv[])
 }
 
 static void
-automatic(char *file, char *as, char *out, int mode)
+automatic(char *file, char *assembly, char *out, int mode)
 {
+	char build[33] = { 0 };
+	char buf[BUFSIZ];
+	Inst *inst;
 	FILE *afp, *ofp, *rfp;
 
 	if (mode == KEEP_GOING) {
-		if ((afp = fopen(as, "w")) == NULL)
-			error("couldn't open file: %s", as);
+		if ((afp = fopen(assembly, "w")) == NULL)
+			error("couldn't open file: %s", assembly);
 		if ((ofp = fopen(out, "w")) == NULL)
 			error("couldn't open file: %s", out);
 	}
@@ -53,6 +58,16 @@ automatic(char *file, char *as, char *out, int mode)
 	if ((rfp = fopen(file, "r")) == NULL)
 		error("couldn't open file: %s", file);
 
+
+	while (fgets(buf, sizeof(buf), rfp)) {
+		if ((inst = parseinst(buf)) == NULL)
+			error("invalid syntaxe: %s", buf);
+		/* build assembly code */
+		if (inst->argc) {
+			(oplst[inst->argv[0]].build)(inst, build);
+			(void)fprintf(afp, "%s\n", build);
+		}
+	}
 
 	fclose(rfp);
 
